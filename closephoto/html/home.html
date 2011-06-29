@@ -34,16 +34,6 @@
 				$('#photos').append(app.markup(template, [100, 100, '../images/photo.jpg']));
 		}
 		
-		bc.device.enterFullScreen( 
-      function() {
-        console.log('Full screen')
-      },
-      function( data ) {
-        bc.utils.warn( data.errorCode );
-      },
-      {"hideStatusBar":"true"}
-    );
-		
 		else {
 			var w = bc.ui.width(), h = bc.ui.height();
 			
