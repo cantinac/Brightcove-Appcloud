@@ -56,7 +56,7 @@ app.getPhotos = function(callback) {
           location +=  geo_data.address.properties.city;
         }
         
-        url = 'http://picasaweb.google.com/data/feed/api/all?l=' + location + '&max-results=20&alt=json&fields=entry(media:group(media:thumbnail))';
+        url = 'http://picasaweb.google.com/data/feed/api/all?l=' + location + '&max-results=109&alt=json&fields=entry(media:group(media:thumbnail))';
         
         bc.device.fetchContentsOfURL(url, 
       		function(xml) {
