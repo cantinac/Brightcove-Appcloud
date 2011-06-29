@@ -19,6 +19,18 @@
 	  <script src="../javascript/app.js"></script>
 
     <script type="text/javascript">
+	/* TODOs
+	better notification of what's going on when a spinner is up
+	cache geo info
+	resize image on orientation change
+	image metadata overlay on tap
+	prev/next navigation of images
+	fill the gallery screen (get rid of extra space)
+	center large image on detail
+	fix scrolling problem
+	spinner when loading an image for the detail page
+	*/
+	
       /* acex4d - add view script */
     $(bc).bind("init", function () {
 		// TODO include full url for large image
@@ -59,15 +71,17 @@
 				var d = Math.min(minWidth, minHeight);
 				
 				for(i=0; i<images.length; i++) {
-				  console.log(d);
-				  
+//				  console.log(d);
 					var image = images[i];
 					$('#photos').append(app.markup(template, [d, d, image['media$thumbnail'][0].url, image['media$thumbnail'][2].url, image['media$content'][0].url ]));
 				}
 				
 				$('#photos .thumb').bind('tap', function(evt) {
 					// TODO get the target and set the source
-					$('#largeImage').attr('src', $(evt.target).attr('data-full'));
+					var w = bc.ui.width(), h = bc.ui.height();
+					$('#largeImage').attr('src', null);
+					$('#largeImage').attr('src', $(evt.target).attr('data-full')).css('max-width', w).css('max-height', h);
+					
 					bc.ui.forwardPage('#detail');
 				});
 			});
