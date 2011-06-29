@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, minimum-scale=1, maximum-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+    <title>Hello App Cloud!</title>
+
+    <!-- Foundation styles -->
+    <link rel="stylesheet" type="text/css" href="../css/theme-0.3.0.css" />
+
+    <!-- Your styles -->
+    <link rel="stylesheet" type="text/css" href="../css/demo.css" />
+
+    <!-- Foundation JavaScript -->    
+    <script type="text/javascript" src="../javascript/sdk/brightcove-app-cloud-0.3.0.js"></script> 
+
+    <!-- Your JavaScript -->
+    <script type="text/javascript" src="../javascript/demo.js"></script> 
+
+    <script type="text/javascript">
+      $(bc).bind("init", function () {
+          // Allow auto-rotation of this page
+          bc.device.setAutoRotateDirections(["all"]);
+
+          // Activate touch states on list items with a 100-ms delay
+          demo.registerTouchState($("li"), 100);
+
+          // Display the current mode
+          $("#current-mode").bind("tap", function (evt) {
+              /* acex3a - get current mode */
+              $("#current-mode").html("Get current mode: \"" + bc.core.current_mode + "\"");
+          });
+
+          // Set a string value in the application cache
+          $("#set-cache").bind("tap", function (evt) {
+              /* acex3b1 - add value to cache */
+              var rand = Math.random().toString().substr(0,10);
+			bc.core.cache("rand", rand);
+			$("#set-cache").html("Set value in cache: \"" + rand + "\"");
+			
+          });
+
+          // Retrieve a named value from the application cache
+          $("#get-cache").bind("tap", function (evt) {
+              /* acex3b2 - get value from cache */
+              $("#get-cache").html("Get value from cache: \"" + bc.core.cache("rand") + "\"");
+			
+          });
+
+          // Get the current view orientation
+          $("#orientation").bind("tap", function (evt) {
+              /* acex3c - get view orientation */
+              $("#orientation").html("Get view orientation: \"" + bc.context.viewOrientation + "\"");
+          });
+      });
+    </script>
+  </head>
+
+  <body>
+    <header class="inside"></header>
+    <section>
+      <h1>Core API</h1>
+      <p><strong>bc.core</strong> includes methods for caching data on the client and refreshing
+      data from the server.</p>
+      <ul class="menu">
+        <li id="current-mode">Get current mode</li>
+        <li id="set-cache">Set value in cache</li>
+        <li id="get-cache">Get value from cache</li>
+      </ul>
+      <h2>Context API</h2>
+      <p><strong>bc.context</strong> exposes information about the current state of the application.</p>
+      <ul class="menu">
+        <li id="orientation">Get view orientation</li>
+      </ul>
+    </section>
+  </body>
+
+</html> 

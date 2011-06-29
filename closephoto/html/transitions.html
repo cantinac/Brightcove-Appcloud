@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, minimum-scale=1, maximum-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+    <title>Hello App Cloud!</title>
+
+    <!-- Foundation styles -->
+    <link rel="stylesheet" type="text/css" href="../css/theme-0.3.0.css" />
+
+    <!-- Your styles -->
+    <link rel="stylesheet" type="text/css" href="../css/demo.css" />
+
+    <!-- Foundation JavaScript -->    
+    <script type="text/javascript" src="../javascript/sdk/brightcove-app-cloud-0.3.0.js"></script> 
+
+    <!-- Your JavaScript -->
+    <script type="text/javascript" src="../javascript/demo.js"></script> 
+
+    <script type="text/javascript">
+      $(bc).bind("init", function () {
+          // Allow auto-rotation of this page
+          bc.device.setAutoRotateDirections(["all"]);
+
+          // Activate touch states on list items with a 100-ms delay
+          demo.registerTouchState($("li"), 100);
+
+          // Transition to detail page
+          $("li").bind("tap", function (evt) {
+              /* acex6a1 - transition to detail page */
+              bc.ui.forwardPage('#detailPage');
+          });
+
+          // Transition back to index page
+          $("#detailPage").bind("swipe", function (evt) {
+              /* acex6a2 - transition back */
+              bc.ui.backPage();
+          });
+      });
+    </script>
+  </head>
+
+  <body>
+      <!--
+        Setting up page transitions:
+        1. Pages are denoted by class="page"
+        2. Pages can be declared in markup or injected with JavaScript
+        3. Pages have a fixed height with overflow set to hidden. It is
+           generally necessary to use iScroll to scroll the main content
+           area, which will exceed the page bounds. The scrollable area 
+           should be denoted by class="scroller". Only the first element
+           in the "scroller" div is scrolled.
+
+           More at http://cubiq.org/iscroll-4
+      -->
+
+      <!-- Page 1 in our sequence -->
+      <div id="indexPage" class="page">
+          <div style="height:50px;background-color:#999">
+              Fixed header
+          </div>
+          <div class="scroller">
+              <div class="scroller-contents">
+                  <section>
+                      <h1>Transitions</h1>
+                      <p>Transitions are used to swap one "page" for another inside a single view.
+                      Click an item below to see this effect:</p>
+                      <ul class="menu">
+                          <li data-color="red">Red</li>
+                          <li data-color="orange">Orange</li>
+                          <li data-color="green">Green</li>
+                          <li data-color="blue">Blue</li>
+                          <li data-color="purple">Purple</li>
+                          <li data-color="brown">Brown</li>
+                      </ul>
+                      <p>Note the use of the fixed header in this example.</p>
+                  </section>
+              </div>
+          </div>
+      </div>
+
+      <!-- Page 2 in our sequence -->
+      <div id="detailPage" class="page">
+          <div class="scroller">
+              <div class="scroller-contents">
+                  <section>
+                      <h1 id="detailHeadline">Page 2</h1>
+                      <p>a fsjklas kljfasd ljkadfs jkladfs 
+                      afsdj klasd ljkadfslkjafsd jkladsf 
+                      adfs kjlafds lkjadfs kjladsfklj afsd
+                      a sjklafds jklafds lkjadfs kjlaf sd
+                      adfs jklafsd ljkasfd jkafkldjs a
+                      df a fdkljsa sdljkafsd kjla sdlkjafd</p>
+                      <a id="back" class="btn">Back to index</a>
+                  </section>
+              </div>
+          </div>
+      </div>
+
+  </body>
+
+</html> 

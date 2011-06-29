@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, minimum-scale=1, maximum-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+    <title>Hello App Cloud!</title>
+
+    <!-- Foundation styles -->
+    <link rel="stylesheet" type="text/css" href="../css/theme-0.3.0.css" />
+
+    <!-- Your styles -->
+    <link rel="stylesheet" type="text/css" href="../css/demo.css" />
+
+    <!-- Foundation JavaScript -->    
+    <script type="text/javascript" src="../javascript/sdk/brightcove-app-cloud-0.3.0.js"></script> 
+
+    <!-- Your JavaScript -->
+    <script type="text/javascript" src="../javascript/demo.js"></script> 
+
+    <script type="text/javascript">
+        $(bc).bind("init", (function () {
+            // Allow auto-rotation of this page
+            bc.device.setAutoRotateDirections(["all"]);
+        });
+    </script>
+  </head>
+
+  <body>
+    <div id="indexPage" class="pg">
+      <div class="pg-bounds">
+          <header class="inside"></header>
+          <section>
+            <h1>Audio and Video</h1>
+
+            <p>Embedded YouTube video:</p>
+
+            <!-- Start YouTube Player -->
+            <iframe class="youtube-player" type="text/html" width="300" height="200" src="http://www.youtube.com/embed/fLreo24WYeQ"></iframe>
+            <!-- End YouTube Player -->
+
+            <p>Embedded Brightcove video:</p>
+
+            <!-- Start of Brightcove Player -->
+            <div style="display:none"></div>
+            
+            <script type="text/javascript" type="text/javascript" src="http://admin.brightcove.com/js/BrightcoveExperiences.js"></script>
+            
+            <object id="myExperience839019442001" class="BrightcoveExperience">
+               <param name="bgcolor" value="#FFFFFF" />
+               <param name="width" value="300" />
+               <param name="height" value="200" />
+               <param name="playerID" value="835199013001" />
+               <param name="playerKey" value="AQ~~,AAAAwnfEsvk~,KAoXD_LRPPB5swx0MfLg05G8agjxyQ1V" />
+               <param name="isVid" value="true" />
+               <param name="isUI" value="true" />
+               <param name="dynamicStreaming" value="true" />
+               <param name="@videoPlayer" value="839019442001" />
+            </object>
+            
+            <script type="text/javascript" type="text/javascript">brightcove.createExperiences();</script>
+            <!-- End of Brightcove Player -->
+
+            <p>HTML5 audio (MP3):</p>
+
+            <audio id="sound-fx" src="../audio/sample.mp3" preload="auto" controls style="width:100%"></audio>
+
+          </section>
+      </div>
+    </div>
+
+  </body>
+
+</html>

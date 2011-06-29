@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, minimum-scale=1, maximum-scale=1" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+    <title>Home</title>
+
+    <!-- acex2b - add theme and app styles -->
+    <link rel="stylesheet" href="../css/theme-0.3.0.css" />
+	<link rel="stylesheet" href="../css/app.css" />
+	
+
+    <!-- acex2c - import sdk and app scripts -->
+    <script src="../javascript/sdk/brightcove-app-cloud-0.3.0.js"></script> 
+	<script src="../javascript/app.js"></script>
+	 
+
+    <script type="text/javascript">
+      /* acex4d - add view script */
+    $(bc).bind("init", function () {
+          // Allow auto-rotation of this page
+          bc.device.setAutoRotateDirections(["all"]);
+
+		if (!bc.device.isNative()) {
+			for(var i=0; i<20; i++)
+				$('#photos').append('<div><img src="../images/photo.jpg" /></div>');
+		}
+		
+		else {
+		app.spinner = $(bc.ui.spinner()).hide().appendTo($("body"));
+		app.getPhotos(function(data) {
+			var json = JSON.parse(data);
+			var entries = json.feed.entry;
+			for(var i=0; i<entries.length; i++) {
+				//var url = entries[i].content.src;
+				var entry = entries[i];
+//				var content = entries[i].content;
+				var url = entry['media$group']['media$thumbnail'][0].url;	// note: multiple thumbs available but we take the first one
+//				var url = content.src;
+				// todo other attributes on the image?
+				// TODO make a thumbnail
+				$('#photos').append('<img src="' + url + '" class="thumb" />');
+//				$('#photos').append(formatThumbnail(url));
+			}
+//			bc.device.alert(json.feed.entry[0].content.src);
+			/*
+			$(xml, 'content entry').each(function() {
+				var url = $(this).attr('src');
+			});
+			*/
+		});
+		}
+	});            
+    </script>
+  </head>
+
+  <body>
+<!--
+    <header class="home">
+      <img src="../images/bc-demo-logo.png" width="85%" alt="Brightcove App Cloud" />
+    </header>
+-->
+    <section>
+	<div id="photos">
+	</div>
+	<!--
+      <h1>Welcome developers!</h1>
+      <p>We encourage you to take apart this sample template and see how
+      easy it is to use App Cloud!</p>
+      <p>Be sure to check out the API docs included with this distribution.</p>
+      <p><em>SDK Version: 0.3.0</em></p>
+	-->
+    </section>
+  </body>
+
+</html> 

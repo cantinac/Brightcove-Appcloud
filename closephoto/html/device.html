@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, minimum-scale=1, maximum-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+    <title>Hello App Cloud!</title>
+
+    <!-- Foundation styles -->
+    <link rel="stylesheet" type="text/css" href="../css/theme-0.3.0.css" />
+
+    <!-- Your styles -->
+    <link rel="stylesheet" type="text/css" href="../css/demo.css" />
+
+    <!-- Foundation JavaScript -->    
+    <script type="text/javascript" src="../javascript/sdk/brightcove-app-cloud-0.3.0.js"></script> 
+
+    <!-- Your JavaScript -->
+    <script type="text/javascript" src="../javascript/demo.js"></script> 
+
+    <script type="text/javascript">
+      $(bc).bind("init", function () {
+          // Allow auto-rotation of this page
+          bc.device.setAutoRotateDirections(["all"]);
+
+          // Activate touch states on list items with a 100-ms delay
+          demo.registerTouchState($("li"), 100);
+
+          // Generate a browser alert, then a native alert
+          $("#native-alert").bind("tap", function (evt) {
+			bc.device.alert('foo bar!!!');
+              /* acex4a - call alert and native alert */
+              
+          });
+
+          // Scan a QR code. Make your own QR code at http://qrcode.kaywa.com
+          $("#scan-qr-code").bind("tap", function (evt) {
+              /* acex4b - get QR code */
+              bc.device.getQRCode( function (data) {
+			                      $("#scan-qr-code").html("Scan QR Code: \"" + data + "\"");
+			                  	},
+			                  	function (data) {
+			                      	  bc.device.alert("Oops! " + data.errorCode);
+			                  	}
+			              	     );
+			
+          });
+
+          // Enter full screen mode
+          $("#enter-full-screen").bind("tap", function (evt) {
+              /* acex4c1 - go fullscreen */
+				bc.device.alert('foo');
+              bc.device.enterFullScreen(function() {}, function(){}, null);
+          });
+
+          // Exit full screen mode
+          $("#exit-full-screen").bind("tap", function (evt) {
+              /* acex4c2 - exit fullscreen */
+              bc.device.exitFullScreen();
+          });
+
+          // Is full screen?
+          $("#is-full-screen").bind("tap", function (evt) {
+              /* acex4c3 - is fullscreen? */
+              bc.device.isFullScreen(function(data) {bc.device.alert(data);}, function(data) {});
+          });
+
+          // Is native?
+          $("#is-native").bind("tap", function (evt) {
+              /* acex4d - is Native? */
+              bc.device.alert("Native App: " + bc.device.isNative());
+			
+          });
+
+          // Fetch contents of URL (XML response)
+          $("#fetch-xml").bind("tap", function (evt) {
+              /* acex4e1 - fetch XML */
+              bc.device.fetchContentsOfURL('http://www.google.com/ig/api?weather=02142', 
+				function(xml) {
+					bc.device.alert($(xml).find('current_conditions condition').attr('data'));
+				},
+				function(data) {});
+          });
+
+          // Fetch contents of URL (JSON response)
+          $("#fetch-json").bind("tap", function (evt) {
+              /* acex4e2 - fetch JSON */
+              
+          });
+
+          $("#vibrate").bind("tap", function (evt) {
+              bc.device.vibrate();
+          });
+
+          // Is camera available?
+          $("#is-camera-available").bind("tap", function (evt) {
+              bc.device.isCameraAvailable(
+                  function (data) {
+                      $("#is-camera-available").html("Is Camera Available? " + formatBoolean(data));
+                  },
+                  function (data) {
+                      bc.device.alert("Oops! " + data.errorCode);
+                  }
+              );
+          });
+
+          // Get a photo from the user's library
+          $("#get-photo").bind("tap", function (evt) {
+              bc.device.getPhoto(
+                  function (data) {
+                      $("#get-photo").html("Get Photo:<br>" + formatThumbnail(data));
+                  },
+                  function (data) {
+                      bc.device.alert("Oops! " + data.errorCode);
+                  }
+              );
+          });
+
+          // Take a photo
+          $("#take-photo").bind("tap", function (evt) {
+              bc.device.takePhoto(
+                  function (data) {
+                      $("#take-photo").html("Take Photo:<br>" + formatThumbnail(data));
+                  },
+                  function (data) {
+                      bc.device.alert("Oops! " + data.errorCode);
+                  }
+              );
+          });
+
+          $("#get-location").bind("tap", function (evt) {
+              bc.device.getLocation(
+                  function (data) {
+                      // Create image tag
+                      var img = '<img src="http://maps.google.com/maps/api/staticmap?sensor=false&center={{0}},{{1}}&zoom=14&size=200x250&markers=color:blue|label:A|{{0}},{{1}}" class="thumb" width="200" height="250">';
+
+                      // Display image
+                      var lat = data.latitude;
+                      var lon = data.longitude;
+                      $("#get-location").html("Get Location: " + demo.markup(img, [lat, lon]));
+                  },
+                  function (data) {
+                      bc.device.alert("Oops! " + data.errorCode);
+                  }
+              );
+          });
+
+          // Format boolean value for HTML display
+          function formatBoolean(bool) {
+              var html = '<span class="{{0}}">{{1}}</span>'
+
+              return demo.markup(html, [bool ? "yes" : "no", bool ? "Yes" : "No"]);
+          }
+
+          // Format dataURI for HTML display
+          function formatThumbnail(dataURI) {
+              var html = '<img src="{{0}}" width="200" class="thumb"/>';
+
+              return demo.markup(html, [dataURI]);
+          }
+      });
+    </script>
+  </head>
+
+  <body>
+    <header class="inside"></header>
+    <section>
+      <h1>Device API</h1>
+      <p><strong>bc.device</strong> provides functions to interact with the native capabilities of a device.</p>
+<form>
+	<p>input: <input type="text" /></p>
+	<p>search: <input type="search" /></p>
+	<p>email: <input type="email" /></p>
+	<p><select><option>Foo</option><option>Bar</option></select></p>
+	
+	
+</form>
+      <ul class="menu">
+        <li id="native-alert">Native Alert</li>
+        <li id="scan-qr-code">Scan QR Code</li>
+        <li id="enter-full-screen">Enter Full Screen</li>
+        <li id="exit-full-screen">Exit Full Screen</li>
+        <li id="is-full-screen">Is Full Screen?</li>
+        <li id="is-native">Is Native?</li>
+        <li id="fetch-xml">Fetch Contents (XML)</li>
+        <li id="fetch-json">Fetch Contents (JSON)</li>
+        <li id="vibrate">Vibrate</li>
+        <li id="is-camera-available">Is Camera Available?</li>
+        <li id="get-photo">Get Photo</li>
+        <li id="take-photo">Take Photo</li>
+        <li id="get-location">Get Location</li>
+      </ul>
+    </section>
+  </body>
+
+</html> 

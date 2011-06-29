@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+  <name>ClosePhoto</name>
+  <description>Browse photos taken near you</description>
+  <devices>
+    <device name='iPhone'></device>
+    <device name='Android'></device>
+  </devices>
+  <views>
+    <view>
+      <navigationTitle>Home</navigationTitle>
+      <uri>html/home.html</uri>
+      <navigationIcon>images/icons/home.png</navigationIcon>
+    </view>
+<!--
+    <view>
+      <navigationTitle>Core</navigationTitle>
+      <uri>html/core.html</uri>
+      <navigationIcon>images/icons/core.png</navigationIcon>
+    </view>
+    <view>
+      <navigationTitle>Device</navigationTitle>
+      <uri>html/device.html</uri>
+      <navigationIcon>images/icons/device.png</navigationIcon>
+    </view>
+    <view>
+      <navigationTitle>UI</navigationTitle>
+      <uri>html/ui.html</uri>
+      <navigationIcon>images/icons/ui.png</navigationIcon>
+    </view>
+    <view>
+      <navigationTitle>Custom Component</navigationTitle>
+      <uri>html/component-custom.html</uri>
+      <navigationIcon>images/icons/component.png</navigationIcon>
+    </view>
+    <view>
+      <navigationTitle>Extended Component</navigationTitle>
+      <uri>html/component-extended.html</uri>
+      <navigationIcon>images/icons/component.png</navigationIcon>
+    </view>
+    <view>
+      <navigationTitle>Standard Component</navigationTitle>
+      <uri>html/component-standard.html</uri>
+      <navigationIcon>images/icons/component.png</navigationIcon>
+    </view>
+    <view>
+      <navigationTitle>Standard Component Extended</navigationTitle>
+      <uri>html/component-standard-extended.html</uri>
+      <navigationIcon>images/icons/component.png</navigationIcon>
+    </view>
+    <view>
+      <navigationTitle>Transitions</navigationTitle>
+      <uri>html/transitions.html</uri>
+      <navigationIcon>images/icons/transition.png</navigationIcon>
+    </view>
+    <view>
+      <navigationTitle>Audio and Video</navigationTitle>
+      <uri>html/media.html</uri>
+      <navigationIcon>images/icons/media.png</navigationIcon>
+    </view>
+    <view>
+      <navigationTitle>Geolocation</navigationTitle>
+      <uri>html/geo.html</uri>
+      <navigationIcon>images/icons/geo.png</navigationIcon>
+    </view>
+    <view>
+      <navigationTitle>About</navigationTitle>
+      <uri>html/about.html</uri>
+      <navigationIcon>images/icons/about.png</navigationIcon>
+    </view>
+-->
+  </views>
+</template>

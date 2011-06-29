@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, minimum-scale=1, maximum-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+    <title>Hello App Cloud!</title>
+
+    <!-- Foundation styles -->
+    <link rel="stylesheet" type="text/css" href="../css/theme-0.3.0.css" />
+
+    <!-- Your styles -->
+    <link rel="stylesheet" type="text/css" href="../css/demo.css" />
+    <style type="text/css">
+        #tap-demo, #init-demo, #orient-demo {
+            padding: 10px;
+            background-color: #DDD;
+            border: 1px solid #CCC;
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        #tap-demo {
+            padding: 50px;
+            border: 2px dashed #999;
+        }
+    </style>
+
+    <!-- Foundation JavaScript -->    
+    <script type="text/javascript" src="../javascript/sdk/brightcove-app-cloud-0.3.0.js"></script> 
+
+    <!-- Your JavaScript -->
+    <script type="text/javascript" src="../javascript/demo.js"></script> 
+
+    <script type="text/javascript">
+      $(bc).bind("init", function () {
+          // Allow auto-rotation of this page
+          bc.device.setAutoRotateDirections(["all"]);
+
+          // Activate touch states on list items with a 100-ms delay
+          demo.registerTouchState($("li"), 100);
+
+          // Get the screen dimensions
+          $("#get-dimensions").bind("tap", function (evt) {
+              /* acex5a - get dimensions */
+			bc.device.alert("Dimensions: " + bc.ui.width() + "x" + bc.ui.height());
+
+          });
+
+          /* acex5b1 - append the spinner */
+          
+		var spinner = $(bc.ui.spinner()).hide().appendTo($("body"));
+
+
+          // Show spinner
+          $("#show-spinner").bind("tap", function (evt) {
+              /* acex5b2 - show the spinner */
+              spinner.show();
+          });
+
+          // Hide spinner
+          $("#hide-spinner").bind("tap", function (evt) {
+              /* acex5b3 - hide the spinner */
+              spinner.hide();
+          });
+
+          // Enable rotation
+          $("#enable-rotation").bind("tap", function (evt) {
+              bc.device.setAutoRotateDirections([
+                  bc.ui.orientation.LANDSCAPE_LEFT,
+                  bc.ui.orientation.LANDSCAPE_RIGHT,
+                  bc.ui.orientation.PORTRAIT,
+                  bc.ui.orientation.PORTRAIT_UPSIDEDOWN
+              ]);
+
+              // or
+              // bc.device.setAutoRotateDirections(["all"]);
+
+              bc.device.alert("Auto-rotation enabled in this view.");
+          });
+
+          // Disable rotation
+          $("#disable-rotation").bind("tap", function (evt) {
+              bc.device.setAutoRotateDirections([bc.ui.orientation.PORTRAIT]);
+              bc.device.alert("Auto-rotation disabled in this view.");
+          });
+
+          // Respond to init event (this function)
+          $("#init-demo").html("Initialized!");
+
+          // Bind to a vieworientationchange event
+          $(bc).bind("vieworientationchange", function (evt, data) {
+              $("#orient-demo").html(
+                  data.orientation + " (" + data.width + "x" + data.height + ")"
+              );
+          });
+
+          // TAP and SWIPE events are custom events added to the jQuery object.
+          // You can bind to and delegate these events.
+          // See http://api.jquery.com/bind/ and http://api.jquery.com/delegate/
+
+          // Bind to a tap event.
+          /* acex5c1 bind to tap event */
+          
+
+          // Bind to a swipe event
+          /* acex5c2 - bind to swipe event */
+          
+
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="indexPage" class="pg">
+      <div class="pg-bounds">
+          <header class="inside"></header>
+          <section>
+            <h1>UI API</h1>
+            <p><strong>bc.ui</strong> provides functions that interact with the DOM.</p>
+            <ul class="menu">
+              <li id="get-dimensions">Get Dimensions</li>
+              <li id="show-spinner">Show Spinner</li>
+              <li id="hide-spinner">Hide Spinner</li>
+              <li id="disable-rotation">Disable Rotation</li>
+              <li id="enable-rotation">Enable Rotation</li>
+            </ul>
+            <h2>Events</h2>
+            <p>Listen for an <em>init</em> event to know when the view is ready to display:</p>
+            <div id="init-demo">...</div>
+            <p>Rotate the device to trigger a <em>vieworientationchange</em> event:</p>
+            <div id="orient-demo">...</div>
+            <p>Tap or swipe the box below to trigger a <em>tap</em> or <em>swipe</em> event:</p>
+            <div id="tap-demo">...</div>
+          </section>
+      </div>
+    </div>
+  </body>
+
+</html>

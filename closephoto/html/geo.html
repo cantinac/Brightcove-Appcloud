@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, minimum-scale=1, maximum-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+    <title>Hello App Cloud!</title>
+
+    <!-- Foundation styles -->
+    <link rel="stylesheet" type="text/css" href="../css/theme-0.3.0.css" />
+
+    <!-- Your styles -->
+    <link rel="stylesheet" type="text/css" href="../css/demo.css" />
+
+    <!-- Foundation JavaScript -->    
+    <script type="text/javascript" src="../javascript/sdk/brightcove-app-cloud-0.3.0.js"></script> 
+
+    <!-- Your JavaScript -->
+    <script type="text/javascript" src="../javascript/demo.js"></script> 
+    <script type="text/javascript" src="../javascript/simplegeo.context.jq.min.js"></script> 
+
+    <script type="text/javascript">
+      $(bc).bind("init", function () {
+          // Allow auto-rotation of this page
+          bc.device.setAutoRotateDirections(["all"]);
+
+          // Show spinner
+          var spinner = $(bc.ui.spinner()).hide().appendTo($("body"));
+
+          // Create simplegeo client. Get a free API key at simplegeo.com
+          var client = new simplegeo.ContextClient('pAD76PYvLJajPvDfWKyHR8QRYBXUWZan');
+
+          // Get device location
+          $("#refresh").bind("tap", function (evt) {
+              spinner.show();
+
+              bc.device.getLocation(
+                  function (data) {
+                      var lat = data.latitude;
+                      var lon = data.longitude;
+    
+                      // Load geo data
+                      client.getContext(lat, lon, function(err, geo_data) {
+                          if (err) {
+                              bc.device.alert("Oops! " + err);
+                          } else {
+                              // display results
+                              $("#results").html(formatResponse(geo_data));
+                              spinner.hide();
+                          }
+                      });
+                  },
+                  function (data) {
+                      bc.device.alert("Oops! " + data.errorCode);
+                  }
+              );
+          });
+
+          function formatResponse(geo_data) {
+              return formatLocation(geo_data) +
+                     formatAddress(geo_data) + 
+                     formatWeather(geo_data);
+          }
+
+          function formatLocation(geo_data) {
+              var html = 
+                '<h2>Location</h2>\
+                 <table class="props">\
+                     <tr><th>Latitude</th><td>{{latitude}}</td></tr>\
+                     <tr><th>Longitude</th><td>{{longitude}}</td></tr>\
+                 </table>';
+
+              return demo.markup(html, geo_data.query);
+          }
+
+          function formatAddress(geo_data) {
+              var html = 
+                '<h2>Address</h2>\
+                 <table class="props">\
+                     <tr><th>Address</th><td>{{address}}</td></tr>\
+                     <tr><th>City</th><td>{{city}}</td></tr>\
+                     <tr><th>Province</th><td>{{province}}</td></tr>\
+                     <tr><th>Country</th><td>{{country}}</td></tr>\
+                     <tr><th>Postal Code</th><td>{{postcode}}</td></tr>\
+                 </table>';
+
+              return demo.markup(html, geo_data.address.properties);
+          }
+
+          function formatWeather(geo_data) {
+              var html = 
+                '<h2>Weather</h2>\
+                 <table class="props">\
+                     <tr><th>Cloud Cover</th><td>{{cloud_cover}}</td></tr>\
+                     <tr><th>Conditions</th><td>{{conditions}}</td></tr>\
+                     <tr><th>Dew Point</th><td>{{dewpoint}}</td></tr>\
+                     <tr><th>Temperature</th><td>{{temperature}}</td></tr>\
+                     <tr><th>Wind Direction</th><td>{{wind_direction}}</td></tr>\
+                     <tr><th>Wind Speed</th><td>{{wind_speed}}</td></tr>\
+                 </table>';
+
+              return demo.markup(html, geo_data.weather);
+          }
+      });
+    </script>
+  </head>
+
+  <body>
+    <header class="inside"></header>
+    <section>
+      <h1>Geolocation</h1>
+      <p><em>simplegeo.com</em> provides real-time location information
+      based on device latitude and longitude.</p>
+
+      <a class="btn" id="refresh">Get Location Data</a>
+
+      <div id="results" style="margin:10px 0"></div>
+    </section>
+  </body>
+
+</html> 
