@@ -38,16 +38,39 @@ app.markup = function (html, data) {
 
 app.getPhotos = function(callback) {
 	// TODO drastically limit the data that is returned for the photos
-	var location = 'cambridge,ma';	// TODO fetch based on location
-	var url = 'http://picasaweb.google.com/data/feed/api/all?l=' + location + '&max-results=20&alt=json&fields=entry(media:group(media:thumbnail))';
-	app.spinner.show();
+	var location = 'cambridge,ma',
+	    url,
+      client = new simplegeo.ContextClient('pAD76PYvLJajPvDfWKyHR8QRYBXUWZan');
 
-	bc.device.fetchContentsOfURL(url, 
-		function(xml) {
-			callback(xml);
-			app.spinner.hide();
-		},
-		function(data) { bc.utils.warn( data.errorCode ); }
-	);	
+	bc.device.getLocation(function (data) {
+	  var lat = data.latitude,
+	      lon = data.longitude,
+	      location = '';
+	  
+    // Load geo data
+    client.getContext(lat, lon, function(err, geo_data) {
+      if (err) {
+        bc.device.alert("Oops! " + err);
+      } else {
+        if (geo_data.address.properties.city) {
+          location +=  geo_data.address.properties.city;
+        }
+        
+        url = 'http://picasaweb.google.com/data/feed/api/all?l=' + location + '&max-results=20&alt=json&fields=entry(media:group(media:thumbnail))';
+        
+        bc.device.fetchContentsOfURL(url, 
+      		function(xml) {
+      			callback(xml);
+      			app.spinner.hide();
+      		},
+      		function(data) { bc.utils.warn( data.errorCode ); }
+      	);
+      }
+    });
+	}, function( data ) {
+    bc.utils.warn( data.errorCode );
+  })
+	
+	app.spinner.show();	
 }
 
