@@ -46,6 +46,7 @@ app.hideProgress = function() {
 	app.spinner.hide();
 }
 
+/** Loads photos and calles the given callback with the json data. */
 app.getPhotos = function(callback) {
 	var fetchPhotos = function(location) {
 		var url = 'http://picasaweb.google.com/data/feed/api/all?l=' + location + '&max-results=100&alt=json&fields=entry(media:group)';
@@ -93,10 +94,66 @@ app.getPhotos = function(callback) {
 	}
 }
 
+/** Handles when an image is tapped to display the details. */
+app.displayDetail = function(image) {
+	// TODO get the target and set the source
+	var w = bc.ui.width(), h = bc.ui.height();
+	app.showProgress('Loading image');
+	$('#largeImage').hide().attr('src', $(image).attr('data-full')).css('max-width', w).css('max-height', h);
+	$('#largeImage').load(function(evt) {
+		app.hideProgress();
+		$('#largeImage').show();
+	});
+	bc.ui.forwardPage('#detail');
+}
+
 $(bc).bind("init", function () {
 	// Allow auto-rotation of this page
 	bc.device.setAutoRotateDirections(["all"]);
 
 	app.spinner = $(bc.ui.spinner()).hide().appendTo($("body"));
+
+	var template = '<div class="thumb" data-large="{{3}}" data-full="{{4}}" style="height:{{0}}px; width:{{1}}px; background-image: url(\'{{2}}\')"></div>';
+	
+	// load some fake ones in chrome
+	if (!bc.device.isNative()) {
+		for(var i=0; i<20; i++)
+			$('#photos').append(app.markup(template, [100, 100, '../images/photo.jpg']));
+	} else {
+		app.getPhotos(function(data) {
+			var json = JSON.parse(data);
+			var entries = json.feed.entry;
+			var images = [];
+			var i;
+
+			var maxWidth=0, maxHeight=0;
+			var minWidth=1000, minHeight=100;
+
+			for(i=0; i<entries.length; i++) {
+				var entry = entries[i];
+				var image = entry['media$group'];
+				var thumb = image['media$thumbnail'][0];
+
+				maxWidth = Math.max(maxWidth, thumb.width);
+				maxHeight = Math.max(maxHeight, thumb.height);
+				minWidth = Math.min(minWidth, thumb.width);
+				minHeight = Math.min(minHeight, thumb.height);
+				images[images.length] = image;
+			}
+
+			var d = Math.min(minWidth, minHeight);
+
+			for(i=0; i<images.length; i++) {
+//			  console.log(d);
+				var image = images[i];
+				$('#photos').append(app.markup(template, [d, d, image['media$thumbnail'][0].url, image['media$thumbnail'][2].url, image['media$content'][0].url ]));
+			}
+
+			$('#photos .thumb').bind('tap', function(evt) {
+				app.displayDetail(evt.target);
+			});
+		});
+	}
+	
 });
 
