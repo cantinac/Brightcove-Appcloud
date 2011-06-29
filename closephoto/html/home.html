@@ -21,13 +21,13 @@
     <script type="text/javascript">
       /* acex4d - add view script */
     $(bc).bind("init", function () {
-          // Allow auto-rotation of this page
-          bc.device.setAutoRotateDirections(["all"]);
-
-		app.spinner = $(bc.ui.spinner()).hide().appendTo($("body"));
-
 		// TODO include full url for large image
-		var template = '<div class="thumb" style="height:{{0}}px; width:{{1}}px; background-image: url(\'{{2}}\')"></div>';
+		var template = '<div class="thumb" data-large="{{3}}" data-full="{{4}}" style="height:{{0}}px; width:{{1}}px; background-image: url(\'{{2}}\')"></div>';
+		
+		$('#detail').bind('swipe', function(evt) {
+			// forward -> next image
+			// background -> previous image
+		});
 
 		if (!bc.device.isNative()) {
 			for(var i=0; i<20; i++)
@@ -35,8 +35,6 @@
 		}
 		
 		else {
-			var w = bc.ui.width(), h = bc.ui.height();
-			
 			app.getPhotos(function(data) {
 				var json = JSON.parse(data);
 				var entries = json.feed.entry;
@@ -44,24 +42,34 @@
 				var i;
 				
 				var maxWidth=0, maxHeight=0;
+				var minWidth=1000, minHeight=100;
 				
 				for(i=0; i<entries.length; i++) {
 					var entry = entries[i];
-					var image = entry['media$group']['media$thumbnail'][1];
+					var image = entry['media$group'];
+					var thumb = image['media$thumbnail'][0];
 					
-					maxWidth = Math.max(maxWidth, image.width);
-					maxHeight = Math.max(maxHeight, image.height);
+					maxWidth = Math.max(maxWidth, thumb.width);
+					maxHeight = Math.max(maxHeight, thumb.height);
+					minWidth = Math.min(minWidth, thumb.width);
+					minHeight = Math.min(minHeight, thumb.height);
 					images[images.length] = image;
 				}
 				
-				var d = Math.max(maxWidth, maxHeight);
+				var d = Math.min(minWidth, minHeight);
 				
 				for(i=0; i<images.length; i++) {
 				  console.log(d);
 				  
 					var image = images[i];
-					$('#photos').append(app.markup(template, [53.5, 53.5, image.url]));
+					$('#photos').append(app.markup(template, [d, d, image['media$thumbnail'][0].url, image['media$thumbnail'][2].url, image['media$content'][0].url ]));
 				}
+				
+				$('#photos .thumb').bind('tap', function(evt) {
+					// TODO get the target and set the source
+					$('#largeImage').attr('src', $(evt.target).attr('data-full'));
+					bc.ui.forwardPage('#detail');
+				});
 			});
 		}
 	});            
@@ -74,8 +82,25 @@
       <img src="../images/bc-demo-logo.png" width="85%" alt="Brightcove App Cloud" />
     </header>
 -->
-    <section>
-	<div id="photos"></div>
+	<div id="gallery" class="page">
+        <div class="scroller">
+            <div class="scroller-contents">
+                <section id="photos">
+				</section>
+			</div>
+		</div>
+	</div>
+	
+	<div id="detail" class="page">
+        <div class="scroller">
+            <div class="scroller-contents">
+                <section>
+					<img id="largeImage" />
+				</section>
+			</div>
+		</div>
+	</div>
+	
 	<!--
       <h1>Welcome developers!</h1>
       <p>We encourage you to take apart this sample template and see how

@@ -38,8 +38,7 @@ app.markup = function (html, data) {
 
 app.getPhotos = function(callback) {
 	// TODO drastically limit the data that is returned for the photos
-	var location = 'cambridge,ma',
-	    url,
+	var url,
       client = new simplegeo.ContextClient('pAD76PYvLJajPvDfWKyHR8QRYBXUWZan');
 
 	bc.device.getLocation(function (data) {
@@ -56,7 +55,7 @@ app.getPhotos = function(callback) {
           location +=  geo_data.address.properties.city;
         }
         
-        url = 'http://picasaweb.google.com/data/feed/api/all?l=' + location + '&max-results=109&alt=json&fields=entry(media:group(media:thumbnail))';
+		url = 'http://picasaweb.google.com/data/feed/api/all?l=' + location + '&max-results=100&alt=json&fields=entry(media:group)';
         
         bc.device.fetchContentsOfURL(url, 
       		function(xml) {
@@ -73,4 +72,11 @@ app.getPhotos = function(callback) {
 	
 	app.spinner.show();	
 }
+
+$(bc).bind("init", function () {
+	// Allow auto-rotation of this page
+	bc.device.setAutoRotateDirections(["all"]);
+
+	app.spinner = $(bc.ui.spinner()).hide().appendTo($("body"));
+});
 
