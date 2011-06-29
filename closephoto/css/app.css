@@ -166,8 +166,4 @@ table.props td {
     background-color: #DDD;
 }
 
-body { background-color: #333; }
-#photos div { display: inline-block; margin: 3px; border: 1px solid red; width: 100px; height: 100px; text-align: center; vertical-align: middle; }
-#photos img { display: block; vertical-align: middle; }
-	
-	
+#photos .thumb { float: left; margin: 3px; }	

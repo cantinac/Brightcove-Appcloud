@@ -16,7 +16,6 @@
     <!-- acex2c - import sdk and app scripts -->
     <script src="../javascript/sdk/brightcove-app-cloud-0.3.0.js"></script> 
 	<script src="../javascript/app.js"></script>
-	 
 
     <script type="text/javascript">
       /* acex4d - add view script */
@@ -24,34 +23,43 @@
           // Allow auto-rotation of this page
           bc.device.setAutoRotateDirections(["all"]);
 
+		app.spinner = $(bc.ui.spinner()).hide().appendTo($("body"));
+
+		// TODO include full url for large image
+		var template = '<div class="thumb" style="height:{{0}}px; width:{{1}}px; background:transparent url(\'{{2}}\') no-repeat center center;"></div>';
+
 		if (!bc.device.isNative()) {
 			for(var i=0; i<20; i++)
-				$('#photos').append('<div><img src="../images/photo.jpg" /></div>');
+				$('#photos').append(app.markup(template, [100, 100, '../images/photo.jpg']));
 		}
 		
 		else {
-		app.spinner = $(bc.ui.spinner()).hide().appendTo($("body"));
-		app.getPhotos(function(data) {
-			var json = JSON.parse(data);
-			var entries = json.feed.entry;
-			for(var i=0; i<entries.length; i++) {
-				//var url = entries[i].content.src;
-				var entry = entries[i];
-//				var content = entries[i].content;
-				var url = entry['media$group']['media$thumbnail'][0].url;	// note: multiple thumbs available but we take the first one
-//				var url = content.src;
-				// todo other attributes on the image?
-				// TODO make a thumbnail
-				$('#photos').append('<img src="' + url + '" class="thumb" />');
-//				$('#photos').append(formatThumbnail(url));
-			}
-//			bc.device.alert(json.feed.entry[0].content.src);
-			/*
-			$(xml, 'content entry').each(function() {
-				var url = $(this).attr('src');
+			var w = bc.ui.width(), h = bc.ui.height();
+			
+			app.getPhotos(function(data) {
+				var json = JSON.parse(data);
+				var entries = json.feed.entry;
+				var images = [];
+				var i;
+				
+				var maxWidth=0, maxHeight=0;
+				
+				for(i=0; i<entries.length; i++) {
+					var entry = entries[i];
+					var image = entry['media$group']['media$thumbnail'][1];
+					
+					maxWidth = Math.max(maxWidth, image.width);
+					maxHeight = Math.max(maxHeight, image.height);
+					images[images.length] = image;
+				}
+				
+				var d = Math.max(maxWidth, maxHeight);
+				
+				for(i=0; i<images.length; i++) {
+					var image = images[i];
+					$('#photos').append(app.markup(template, [d, d, image.url]));
+				}
 			});
-			*/
-		});
 		}
 	});            
     </script>
@@ -64,8 +72,7 @@
     </header>
 -->
     <section>
-	<div id="photos">
-	</div>
+	<div id="photos"></div>
 	<!--
       <h1>Welcome developers!</h1>
       <p>We encourage you to take apart this sample template and see how
