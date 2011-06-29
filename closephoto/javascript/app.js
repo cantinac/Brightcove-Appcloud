@@ -36,41 +36,61 @@ app.markup = function (html, data) {
     return html;
 }
 
-app.getPhotos = function(callback) {
-	// TODO drastically limit the data that is returned for the photos
-	var url,
-      client = new simplegeo.ContextClient('pAD76PYvLJajPvDfWKyHR8QRYBXUWZan');
+// displays a spinner/progress indicator with a message
+app.showProgress = function(status) {
+	app.spinner.show();	
+	// does nothing at the moment
+}
 
-	bc.device.getLocation(function (data) {
-	  var lat = data.latitude,
-	      lon = data.longitude,
-	      location = '';
-	  
-    // Load geo data
-    client.getContext(lat, lon, function(err, geo_data) {
-      if (err) {
-        bc.device.alert("Oops! " + err);
-      } else {
-        if (geo_data.address.properties.city) {
-          location +=  geo_data.address.properties.city;
-        }
+app.hideProgress = function() {
+	app.spinner.hide();
+}
+
+app.getPhotos = function(callback) {
+	var fetchPhotos = function(location) {
+		var url = 'http://picasaweb.google.com/data/feed/api/all?l=' + location + '&max-results=100&alt=json&fields=entry(media:group)';
         
-		url = 'http://picasaweb.google.com/data/feed/api/all?l=' + location + '&max-results=100&alt=json&fields=entry(media:group)';
-        
+		app.showProgress('Finding images...');
         bc.device.fetchContentsOfURL(url, 
       		function(xml) {
       			callback(xml);
-      			app.spinner.hide();
+				app.hideProgress();
       		},
       		function(data) { bc.utils.warn( data.errorCode ); }
       	);
-      }
-    });
-	}, function( data ) {
-    bc.utils.warn( data.errorCode );
-  })
+	};
 	
-	app.spinner.show();	
+	// get the location only if it's not already cached
+	var location = bc.core.cache('location');
+	if (location) {
+		fetchPhotos(location);
+	} else {
+		app.showProgress('Finding your location...');
+		
+		var url,
+	      client = new simplegeo.ContextClient('pAD76PYvLJajPvDfWKyHR8QRYBXUWZan');
+
+		bc.device.getLocation(function (data) {
+		  var lat = data.latitude,
+		      lon = data.longitude,
+		      location = '';
+
+		    // Load geo data
+		    client.getContext(lat, lon, function(err, geo_data) {
+		      if (err) {
+		        bc.device.alert("Oops! " + err);
+		      } else {
+		        if (geo_data.address.properties.city) {
+		          location +=  geo_data.address.properties.city;
+					bc.core.cache('location', location);
+		        }
+
+				fetchPhotos(location);
+		      }
+		    });
+		}, 
+		function( data ) { bc.utils.warn( data.errorCode ); });
+	}
 }
 
 $(bc).bind("init", function () {
