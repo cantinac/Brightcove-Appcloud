@@ -6,4 +6,11 @@
     <device name='iPhone'></device>
     <device name='Android'></device>
   </devices>
+  <views>
+    <view>
+      <navigationTitle>Home</navigationTitle>
+      <uri>html/home.html</uri>
+      <navigationIcon>images/icons/home.png</navigationIcon>
+    </view>
+  </views>  
 </template>
