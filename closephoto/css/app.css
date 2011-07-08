@@ -10,7 +10,8 @@ body {margin: 0}
 #imageInfo h3 { font-size: 70%; font-weight: normal; }
 #imageInfo .thumbnail { float: left; margin-right: 5px; height: 40px;}
 
-#largeImageWrapper { display: table-cell; vertical-align: middle; text-align: center; }
+/* .largeImageWrapper { display: table-cell; vertical-align: middle; text-align: center; } */
+#largeImageWrapperClone { position: absolute; top: 0px; }
 #largeImage { -webkit-box-shadow: 1px 1px 8px #000; }
 
 .page { background-color: #292926; }

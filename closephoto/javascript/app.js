@@ -150,20 +150,31 @@ app.getPhotos = function(callback) {
 /** Recenters the detail image. */
 app.recenterImage = function() {
 	var w = bc.ui.width(), h = bc.ui.height();
-	// var image = $(app.getCurrentThumb());
+	var image = $(app.getCurrentThumb());
 
 	// TODO if the lower-size is big enough for display on the detail use that instead as it's probably a smaller filesize by a big margin
 
-	// var imageHeight = Math.min(h, image.data('largeHeight')),
-	// 	imageWidth = Math.min(w, image.data('largeWidth'));
+	var imageHeight = image.data('largeHeight'),
+		imageWidth = image.data('largeWidth');
+
+	var ratio = imageHeight / imageWidth;
+	// console.log([w, h, imageWidth, imageHeight, ratio]);
+
+	if (ratio >= 1 && h / ratio <= w) {
+		imageHeight = h;
+		imageWidth = imageHeight / ratio;
+	} else {
+		imageWidth = w;
+		imageHeight = imageWidth * ratio;
+	}
 
 	$('#largeImageWrapper').css('width', w).css('height', h);
 
 	$('#largeImage')
-		.css('max-width', w)
-		.css('max-height', h);
-		// .css('margin-left', (w - imageWidth) / 2)
-		// .css('margin-top', (h - imageHeight) / 2);
+		.css('width', imageWidth)
+		.css('height', imageHeight)
+		.css('margin-left', (w - imageWidth) / 2)
+		.css('margin-top', (h - imageHeight) / 2);
 };
 
 app.recenterGallery = function() {
@@ -232,14 +243,39 @@ app.getCurrentThumb = function() {
 	return app.getThumb(app.current);
 };
 
-app.displayImage = function(delta) {
+app.displayImage = function(delta, direction) {
 	var i = app.current + delta;
 	if (i < 0 || i >= app.imageCount) return;
 	app.current = i;
+
+	var copy, left;
+
+	// make a copy that we can animate
+	if (app.current) {
+		copy = $('#largeImageWrapper').clone();
+		copy.attr('id', 'largeImageWrapperClone');
+		$('#largeImage', copy).attr('id', 'largeImageClone');
+		copy.insertAfter('#largeImageWrapper');
+	}
+
 	app.displayDetail( app.getCurrentThumb() );
+
+	// slide the other one out if there is one
+	if (copy) {
+		// left = $('#largeImageWrapperClone').css('width') * -1;
+		left = bc.ui.width() * 1.5 * delta;
+		// alert($('#largeImageWrapperClone').css('width'));
+		copy.animate(
+			{'left':left}, 
+			800, 
+			'swing',
+			function() { copy.remove(); }
+		);
+	}
 }
  
 app.nextImage = function() { app.displayImage(1); }
+
 app.prevImage = function() { app.displayImage(-1); }
 
 $(bc).bind("init", function () {
