@@ -166,6 +166,13 @@ app.recenterImage = function() {
 		// .css('margin-top', (h - imageHeight) / 2);
 };
 
+app.recenterGallery = function() {
+	// in the gallery adjust the margin so that the images are centered
+	var w = bc.ui.width();
+	var margin = (w - parseInt(w / app.thumbSize) * app.thumbSize) / 2;
+	$('#photos').css('margin-left', margin);
+};
+
 /** Handles when an image is tapped to display the details. */
 app.displayDetail = function(image) {
 	var title, subTitle, thirdTitle, thumbnail, date, preload;
@@ -247,7 +254,7 @@ $(bc).bind("init", function () {
 	
 	app.getPhotos(function(data) {
 		var json = JSON.parse(data);
-		console.log(json);
+		// console.log(json);
 		var entries = json.feed.entry;
 		// var images = [];
 		var i, e, image, d;
@@ -271,6 +278,10 @@ $(bc).bind("init", function () {
 		}
 
 		d = Math.min(minWidth, minHeight);
+		app.thumbSize = d;
+		app.imageCount = entries.length;
+
+		app.recenterGallery();
 
 		for(i=0; i<entries.length; i++) {
 			entry = entries[i];
@@ -302,8 +313,6 @@ $(bc).bind("init", function () {
 		$('#photos .thumb').bind('tap', function(evt) {
 			app.displayDetail(evt.target);
 		});
-
-		app.imageCount = entries.length;
 	});
 
 	$('#largeImage').load(function(evt) {
@@ -324,6 +333,7 @@ $(bc).bind("init", function () {
 
 	$(bc).bind("vieworientationchange", function (evt, data) {
 		app.recenterImage();
+		app.recenterGallery();
 	});
 
 });
