@@ -24,11 +24,18 @@
 	replace spinner with cantina logo
 	better notification of what's going on when a spinner is up
 	resize image on orientation change
-	image metadata overlay on top
 	fill the gallery screen (get rid of extra space)
-	center large image on detail
 	fix scrolling problem
 	intermediate popup before going to the detail screen
+	show where the image was taken based on geo tags
+	show image file size
+	add transition effect between images
+	show a scroller of the gallery images near the one you are viewing
+	allow getting more images from the search
+	show the total # of images matched
+	show a mini-map for where the photo was taken
+	put some sort of visual indicator on the detail for how far through the images you are
+	allowing getting back to the gallery from the detail
 	*/
 	
     </script>
@@ -50,13 +57,17 @@
 	</div>
 	
 	<div id="detail" class="page">
-        <div class="scroller">
-            <div class="scroller-contents">
-                <section>
-					<img id="largeImage" />
-				</section>
+        <section>
+			<div id="largeImageWrapper"><img id="largeImage" /></div>
+			<!-- stuff to display: width, height, url, credit, type, title (unless it's a file name?) -->
+			<div id="imageInfo" style="display: none;">
+				<div class="thumbnail"></div>
+<!-- 				<a id="closeInfo" class="close"><span>close</span></a>
+ -->				<h1></h1>
+				<h2></h2>
+				<h3></h3>
 			</div>
-		</div>
+		</section>
 	</div>
 
 	

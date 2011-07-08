@@ -56,7 +56,7 @@ $(bc).bind("init", function () {
 		success({"latitude":'70.35', "longitude":'40.34'});
 	};
 
-	bc.device.alert = alert;
+	bc.device.alert = function(message, success, error) { alert(message); };
 
 	bc.device.setAutoRotateDirections = function( directions, successCallback, errorCallback ) {};
 
@@ -69,7 +69,8 @@ $(bc).bind("init", function () {
 
 // displays a spinner/progress indicator with a message
 app.showProgress = function(status) {
-	app.spinner.show();	
+	$('#status').html(status);
+	app.spinner.show();
 	// does nothing at the moment
 }
 
@@ -83,7 +84,8 @@ app.getPhotos = function(callback) {
 		// location can be empty 
 		if (!bc.device.isNative() && location == '') location = 'boston,ma';
 
-		var url = 'http://picasaweb.google.com/data/feed/api/all?l=' + location + '&max-results=100&alt=json&fields=entry(media:group)';
+		var url = 'http://picasaweb.google.com/data/feed/api/all?l=' + location + '&max-results=100&alt=json';
+		// url += '&fields=entry(media:group)';
         
 		app.showProgress('Finding images near you...');
         bc.device.fetchContentsOfURL(url, 
@@ -128,32 +130,74 @@ app.getPhotos = function(callback) {
 	}
 }
 
+/** Recenters the detail image. */
+app.recenterImage = function() {
+	var w = bc.ui.width(), h = bc.ui.height();
+	// var image = $(app.getCurrentThumb());
+
+	// TODO if the lower-size is big enough for display on the detail use that instead as it's probably a smaller filesize by a big margin
+
+	// var imageHeight = Math.min(h, image.data('largeHeight')),
+	// 	imageWidth = Math.min(w, image.data('largeWidth'));
+
+	$('#largeImageWrapper').css('width', w).css('height', h);
+
+	$('#largeImage')
+		.css('max-width', w)
+		.css('max-height', h);
+		// .css('margin-left', (w - imageWidth) / 2)
+		// .css('margin-top', (h - imageHeight) / 2);
+};
+
 /** Handles when an image is tapped to display the details. */
 app.displayDetail = function(image) {
+	var title, subTitle, thirdTitle, thumbnail, date;
+
+	image = $(image);
+	app.current = parseInt(image.attr('data-index'));
+
 	// note: image is a div, not an img
 
 	// TODO when loading an image, precache both the previous and next image AFTER the current image
 	// TODO get the target and set the source
-	var w = bc.ui.width(), h = bc.ui.height();
 	app.showProgress('Loading image');
-	$('#largeImage').hide().css('max-width', w).css('max-height', h).attr('src', $(image).attr('data-full'));
-	$('#largeImage').load(function(evt) {
-		app.hideProgress();
-		$('#largeImage').show();
-	});
+	$('#largeImage').hide().attr('src', image.attr('data-full'));
+
+	app.recenterImage();
+
+	// set up the image info
+	title = image.data('title');
+	subTitle = 'by ' + image.data('author');
+	
+	sizeType = image.data('fullWidth') + 'x' + image.data('fullHeight') + ' (' + image.data('imageType') + ')';
+	date = new Date(parseInt(image.data('timestamp')));
+	thirdTitle = date.toString();
+
+	thumbnail = image.data('authorThumbnail');
+
+	$('#imageInfo h1').html(title);
+	$('#imageInfo h2').html(subTitle);
+	$('#imageInfo h3').html(thirdTitle);
+
+	if (thumbnail)
+		$('#imageInfo .thumbnail').html(app.markup('<img src="{{0}}" />', [thumbnail])).show();
+	else
+		$('#imageInfo .thumbnail').hide();
 
 	// BCFIXME current page should not be an array
 	if (bc.ui.currentPage[0].id != 'detail')
-		bc.ui.forwardPage('#detail');
-	
-	app.current = parseInt($(image).attr('data-index'));
+		bc.ui.forwardPage('#detail');	
 }
+
+app.getCurrentThumb = function() {
+	return $('#photos .thumb:eq(' + app.current + ')').get(0);
+};
 
 app.displayImage = function(delta) {
 	var i = app.current + delta;
 	if (i < 0 || i >= app.imageCount) return;
-	app.displayDetail( $('#photos .thumb:eq(' + i + ')').get(0) );
 	app.current = i;
+	app.displayDetail( app.getCurrentThumb() );
 }
  
 app.nextImage = function() { app.displayImage(1); }
@@ -163,43 +207,80 @@ $(bc).bind("init", function () {
 	// Allow auto-rotation of this page
 	bc.device.setAutoRotateDirections(["all"]);
 
-	app.spinner = $(bc.ui.spinner()).hide().appendTo($("body"));
+	app.spinner = $('<div id="spinnerContainer"></div>').hide().appendTo($("body"));
+	app.spinner.append(bc.ui.spinner());
+	app.spinner.append('<span id="status"></span>');
 
 	var template = '<div class="thumb" data-large="{{3}}" data-full="{{4}}" data-index="{{5}}" style="height:{{0}}px; width:{{1}}px; background-image: url(\'{{2}}\')"></div>';
 	
 	app.getPhotos(function(data) {
 		var json = JSON.parse(data);
+		console.log(json);
 		var entries = json.feed.entry;
-		var images = [];
-		var i;
+		// var images = [];
+		var i, e, image, d;
+		var entry, image, thumb;
+	
 
 		var maxWidth=0, maxHeight=0;
 		var minWidth=1000, minHeight=100;
 
+		var thumbIndex = 0;
+
 		for(i=0; i<entries.length; i++) {
-			var entry = entries[i];
-			var image = entry['media$group'];
-			var thumb = image['media$thumbnail'][0];
+			entry = entries[i];
+			image = entry['media$group'];
+			thumb = image['media$thumbnail'][thumbIndex];
 
 			maxWidth = Math.max(maxWidth, thumb.width);
 			maxHeight = Math.max(maxHeight, thumb.height);
 			minWidth = Math.min(minWidth, thumb.width);
 			minHeight = Math.min(minHeight, thumb.height);
-			images[images.length] = image;
 		}
 
-		var d = Math.min(minWidth, minHeight);
+		d = Math.min(minWidth, minHeight);
 
-		for(i=0; i<images.length; i++) {
-			var image = images[i];
-			$('#photos').append(app.markup(template, [d, d, image['media$thumbnail'][0].url, image['media$thumbnail'][2].url, image['media$content'][0].url, i ]));
+		for(i=0; i<entries.length; i++) {
+			entry = entries[i];
+			image = entry['media$group'];
+
+			// REFACTOR use $.data rather than data attributes for all of them
+			$('#photos').append(app.markup(template, [
+				d, d, 
+				image.media$thumbnail[thumbIndex].url, 
+				image.media$thumbnail[2].url, 
+				image.media$content[thumbIndex].url, 
+				i]));
+
+			$('#photos .thumb:last')
+				.data('largeWidth', image.media$content[thumbIndex].width)
+				.data('largeHeight', image.media$content[thumbIndex].height)
+				.data('fullWidth', image.media$content[0].width)
+				.data('fullHeight', image.media$content[0].height)
+				.data('imageType', image.media$content[0].type)
+				.data('fullUrl', image.media$content[0].url)
+				.data('author', image.media$credit[0].$t)
+				.data('title', image.media$title.$t)
+				.data('authorThumbnail', entry.author[0].gphoto$thumbnail.$t)
+				.data('authorUrl', entry.author[0].uri.$t)
+				.data('timestamp', entry.gphoto$timestamp.$t)
+				.data('location', entry.georss$where.gml$Point.gml$pos.$t);
 		}
 
 		$('#photos .thumb').bind('tap', function(evt) {
 			app.displayDetail(evt.target);
 		});
 
-		app.imageCount = images.length;
+		app.imageCount = entries.length;
+	});
+
+	$('#largeImage').load(function(evt) {
+		app.hideProgress();
+		$('#largeImage').show();
+	});
+
+	$('#largeImage').bind('tap', function(evt) {
+		$('#imageInfo').slideToggle();
 	});
 	
 	$('#detail').bind('swipe', function(evt, direction) {
