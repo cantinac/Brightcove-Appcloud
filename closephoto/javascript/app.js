@@ -39,11 +39,9 @@ app.markup = function (html, data) {
 }
 
 $(bc).bind("init", function () {
+	var wrappedFetch = bc.device.fetchContentsOfURL;
 
-	// non-native improvements
-	if (bc.device.isNative()) return;
-
-
+	// native call does not support query parameters
 	bc.device.fetchContentsOfURL = function(url, success, error) {
 		// note: start chrome with --disable-web-security to disable cross-domain
 		$.get(url, function(json) {
@@ -52,15 +50,23 @@ $(bc).bind("init", function () {
 		});
 	};
 
-	bc.device.getLocation = function(success, error) {
-		success({"latitude":'70.35', "longitude":'40.34'});
-	};
+	// non-native improvements
+	if (bc.device.isNative()) {
+		// workaround for the workbench not supporting '&'' in the URL
+		// bc.device.fetchContentsOfURL = function(url, success, error) {
+		// 	url = url.replace('&', escape('&'));
+		// 	wrappedFetch(url, success, error);
+		// };
+	} else {
 
-	bc.device.alert = function(message, success, error) { alert(message); };
+		bc.device.getLocation = function(success, error) {
+			success({"latitude":'70.35', "longitude":'40.34'});
+		};
 
-	bc.device.setAutoRotateDirections = function( directions, successCallback, errorCallback ) {};
+		bc.device.alert = function(message, success, error) { alert(message); };
 
-
+		bc.device.setAutoRotateDirections = function( directions, successCallback, errorCallback ) {};
+	}
 });
 
 
@@ -82,16 +88,18 @@ app.hideProgress = function() {
 app.getPhotos = function(callback) {
 	var fetchPhotos = function(location) {
 		// location can be empty 
-		if (!bc.device.isNative() && location == '') location = 'boston,ma';
+		if (!bc.device.isNative() && location == '') location = 'Newton, MA';
 
-		var url = 'http://picasaweb.google.com/data/feed/api/all?l=' + location + '&max-results=100&alt=json';
+		var url = 'http://picasaweb.google.com/data/feed/api/all?max-results=100&alt=json&l=' + escape(location);
 		// url += '&fields=entry(media:group)';
         
+        // bc.device.alert(location);
 		app.showProgress('Finding images near you...');
         bc.device.fetchContentsOfURL(url, 
-      		function(xml) {
-      			callback(xml);
+      		function(data) {
+      			// bc.device.alert(data);
 				app.hideProgress();
+      			callback(data);
       		},
       		function(data) { bc.utils.warn( data.errorCode ); }
       	);
@@ -110,15 +118,24 @@ app.getPhotos = function(callback) {
 		bc.device.getLocation(function (data) {
 		  var lat = data.latitude,
 		      lon = data.longitude,
-		      location = '';
+		      location = '',
+		      address, city, state;
 
 		    // Load geo data
 		    client.getContext(lat, lon, function(err, geo_data) {
 		      if (err) {
 		        bc.device.alert("Oops! " + err);
 		      } else {
-		        if (geo_data.address && geo_data.address.properties.city) {
-		          location +=  geo_data.address.properties.city;
+		      	// for(var prop in geo_data.address.properties)
+		      	// 	bc.device.alert(prop + ' ' + geo_data.address.properties[prop]);
+		        if (geo_data.address) {
+		        	address = geo_data.address.properties.address;
+		        	city = geo_data.address.properties.city;
+		        	state = geo_data.address.properties.province;
+		        	// note: 'distance' provides floating point distance
+		        	location = (address ? address : ' ') + 
+		        		(city ? city : '') +
+		        		(state ? ', ' + state : '');
 		        }
 
 				bc.core.cache('location', location);
@@ -289,5 +306,10 @@ $(bc).bind("init", function () {
 		else if (direction == 'swipeLeft')
 			app.prevImage();
 	});
+
+	$(bc).bind("vieworientationchange", function (evt, data) {
+		app.recenterImage();
+	});
+
 });
 
