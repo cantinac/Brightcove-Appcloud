@@ -168,7 +168,7 @@ app.recenterImage = function() {
 
 /** Handles when an image is tapped to display the details. */
 app.displayDetail = function(image) {
-	var title, subTitle, thirdTitle, thumbnail, date;
+	var title, subTitle, thirdTitle, thumbnail, date, preload;
 
 	image = $(image);
 	app.current = parseInt(image.attr('data-index'));
@@ -203,11 +203,26 @@ app.displayDetail = function(image) {
 
 	// BCFIXME current page should not be an array
 	if (bc.ui.currentPage[0].id != 'detail')
-		bc.ui.forwardPage('#detail');	
+		bc.ui.forwardPage('#detail');
+
+	// preload the 2 neighboring images
+	preload = function(i) {
+		var thumb = app.getThumb(i);
+		if (!thumb) return;
+		$('<img style="display: none;" />').attr('src', $(thumb).attr('data-full'));
+	};
+
+	preload(app.current - 1);
+	preload(app.current + 1);
 }
 
+app.getThumb = function(i) {
+	if (i < 0 || i >= app.imageCount) return null;
+	return $('#photos .thumb:eq(' + i + ')').get(0);
+};
+
 app.getCurrentThumb = function() {
-	return $('#photos .thumb:eq(' + app.current + ')').get(0);
+	return app.getThumb(app.current);
 };
 
 app.displayImage = function(delta) {
