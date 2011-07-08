@@ -47,7 +47,7 @@ $(bc).bind("init", function () {
 		$.get(url, function(json) {
 			// for compatibility with the api we'll convert to a string
 			success(JSON.stringify(json));
-		});
+		}).error(function() { error(); });
 	};
 
 	// non-native improvements
@@ -88,7 +88,7 @@ app.hideProgress = function() {
 app.getPhotos = function(callback) {
 	var fetchPhotos = function(location) {
 		// location can be empty 
-		if (!bc.device.isNative() && location == '') location = 'Newton, MA';
+		if (!bc.device.isNative() && location == '') location = '11 Cypress St Newton, MA';
 
 		var url = 'http://picasaweb.google.com/data/feed/api/all?max-results=100&alt=json&l=' + escape(location);
 		// url += '&fields=entry(media:group)';
@@ -133,7 +133,7 @@ app.getPhotos = function(callback) {
 		        	city = geo_data.address.properties.city;
 		        	state = geo_data.address.properties.province;
 		        	// note: 'distance' provides floating point distance
-		        	location = (address ? address : ' ') + 
+		        	location = (address ? address + ' ' : ' ') + 
 		        		(city ? city : '') +
 		        		(state ? ', ' + state : '');
 		        }
