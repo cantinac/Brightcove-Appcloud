@@ -282,8 +282,7 @@ $(bc).bind("init", function () {
 	// Allow auto-rotation of this page
 	bc.device.setAutoRotateDirections(["all"]);
 
-	app.spinner = $('<div id="spinnerContainer"></div>').hide().appendTo($("body"));
-	app.spinner.append(bc.ui.spinner());
+	app.spinner = $('<div id="spinnerContainer"><span class="flower" /></div>').hide().appendTo($("body"));
 	app.spinner.append('<span id="status"></span>');
 
 	var template = '<div class="thumb" data-large="{{3}}" data-full="{{4}}" data-index="{{5}}" style="height:{{0}}px; width:{{1}}px; background-image: url(\'{{2}}\')"></div>';

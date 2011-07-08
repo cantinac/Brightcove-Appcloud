@@ -1,7 +1,6 @@
 body {margin: 0}
 
 #photos .thumb {float: left; background-position: center; background-repeat: no-repeat; overflow: hidden;}
-#status { z-index: 100; position: absolute; color: #aaa; display: block; width: 100%; text-align: center; top: 55%; }
 
 #imageInfo { position: absolute; bottom: 0px; padding: 10px 5px; width: 100%; color: white; background-color: #292927; border-top: 1px dashed #4B4B4A; }
 #imageInfo .close { float: right; display: block; margin-right: 10px; margin-top: -5px; font-size: 10px; }
@@ -15,3 +14,20 @@ body {margin: 0}
 #largeImage { -webkit-box-shadow: 1px 1px 8px #000; }
 
 .page { background-color: #292926; }
+
+#spinnerContainer {
+    position: absolute; z-index: 1000; top: 40%; 
+    width: 100%;
+    background-color: #393937;
+    border-top: 1px solid #4B4B4A;
+    border-bottom: 1px dashed #4B4B4A;
+    text-align: center;
+    padding: 5px;
+}
+#spinnerContainer .flower { 
+    background-image: url('../images/flower.png');
+    width: 35px; height: 35px; 
+    display: inline-block;
+    -webkit-animation-name: rotate; -webkit-animation-duration: .7s; -webkit-animation-iteration-count: infinite; -webkit-animation-timing-function: linear; 
+}
+#status { display: block; width: 100%; text-align: center; top: 55%; color: #fff; font-shadow: 1px 1px 1px #1E1E1E; }
