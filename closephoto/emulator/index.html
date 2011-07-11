@@ -1,0 +1,35 @@
+<html>
+
+<head>
+	<title>AppCloud application emulator</title>
+    <link rel="stylesheet" href="emu.css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+
+    <script type="text/javascript">
+function frameChanged() {
+	bc = $('#phone iframe').get(0).contentWindow.bc;
+}
+
+$(function() {
+	$('#phone .actions .back').click(function() {
+		bc.ui.backPage();
+	});
+});
+    </script>
+</head>
+
+<body>
+
+<div id="phoneWrapper">
+	<div id="phone" class="android">
+		<iframe src="../html/home.html" frameborder="0" onload="frameChanged();"></iframe>
+		<div class="actions">
+			<a class="back" onclick="return false;" href="#"><span></span></a>
+		</div>
+	</div>
+</div>
+
+</body>
+
+
+</html>

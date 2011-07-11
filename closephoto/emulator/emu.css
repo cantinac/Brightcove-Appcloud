@@ -1,0 +1,12 @@
+body { background-color: #222; }
+#phone { display: inline-block; text-align: left; position: relative;}
+#phoneWrapper { text-align: center; margin: 0 auto; }
+#phone.android { 
+    width: 368px; height: 674; 
+    background-image:url('images/thunderbolt-stencil.png');
+    padding-top: 0px; padding-left: 0px;
+}
+#phone.android iframe { width: 320px; height: 508px; margin-top: 94px; margin-left: 25px;}
+#phone.android .actions { width: 320px; height: 20px; left: 25px; position: absolute; }
+.android .actions .back { width: 24px; height: 20px; display: block; left: 184px; position: absolute;}
+
