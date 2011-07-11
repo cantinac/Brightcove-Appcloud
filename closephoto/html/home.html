@@ -21,14 +21,12 @@
     <script type="text/javascript">
 	/* TODOs
 	fix scrolling problem on gallery
-	intermediate popup before going to the detail screen
-	show where the image was taken based on geo tags
-	show a mini-map for where the photo was taken
 	show a scroller of the gallery images near the one you are viewing
 	put some sort of visual indicator on the detail for how far through the images you are
 	allow getting more images from the search
 	show the total # of images matched
 	show photo comments if there are any
+	intermediate popup before going to the detail screen
 	show image file size
 	cache image results if it's the same query and hasn't changed recently
 	allow showing all the image results on a map
@@ -67,9 +65,9 @@
 			</div>
 			<!-- stuff to display: width, height, url, credit, type, title (unless it's a file name?) -->
 			<div id="imageInfo" style="display: none;">
+				<div class="minimap"></div>
 				<div class="thumbnail"></div>
-<!-- 				<a id="closeInfo" class="close"><span>close</span></a>
- -->				<h1></h1>
+				<h1></h1>
 				<h2></h2>
 				<h3></h3>
 			</div>

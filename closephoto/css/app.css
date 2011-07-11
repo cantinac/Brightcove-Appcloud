@@ -7,7 +7,8 @@ body {margin: 0}
 #imageInfo h1 { font-size: 95%; }
 #imageInfo h2 { font-size: 80%; font-weight: normal; }
 #imageInfo h3 { font-size: 70%; font-weight: normal; }
-#imageInfo .thumbnail { float: left; margin-right: 5px; height: 40px;}
+#imageInfo .thumbnail { float: left; margin-right: 5px; height: 80px;}
+#imageInfo .minimap { float: right; margin-right: 15px; }
 
 /* .largeImageWrapper { display: table-cell; vertical-align: middle; text-align: center; } */
 #largeImageWrapperClone { position: absolute; top: 0px; }

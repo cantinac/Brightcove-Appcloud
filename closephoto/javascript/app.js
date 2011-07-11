@@ -60,7 +60,7 @@ $(bc).bind("init", function () {
 	} else {
 
 		bc.device.getLocation = function(success, error) {
-			success({"latitude":'70.35', "longitude":'40.34'});
+			success({"latitude":'42.330454', "longitude":'-71.193073'});
 		};
 
 		bc.device.alert = function(message, success, error) { alert(message); };
@@ -219,6 +219,15 @@ app.displayDetail = function(image) {
 	else
 		$('#imageInfo .thumbnail').hide();
 
+	$('#imageInfo .minimap').html('');
+	if (image.data('location')) {
+		$('#imageInfo .minimap').html(app.markup(
+			'<img src="http://maps.google.com/maps/api/staticmap?size=100x100&center={{0}}&maptype=roadmap&sensor=true&markers={{1}}" />', [
+				escape(bc.core.cache('location')),
+				escape('size:small|label:A|' + image.data('location').replace(' ', ','))
+			]));
+	}
+
 	// BCFIXME current page should not be an array
 	if (bc.ui.currentPage[0].id != 'detail')
 		bc.ui.forwardPage('#detail');
@@ -342,7 +351,7 @@ $(bc).bind("init", function () {
 				.data('authorThumbnail', entry.author[0].gphoto$thumbnail.$t)
 				.data('authorUrl', entry.author[0].uri.$t)
 				.data('timestamp', entry.gphoto$timestamp.$t)
-				.data('location', entry.georss$where.gml$Point.gml$pos.$t);
+				.data('location', entry.georss$where ? entry.georss$where.gml$Point.gml$pos.$t : null);
 		}
 
 		$('#photos .thumb').bind('tap', function(evt) {
