@@ -17,18 +17,40 @@ body {margin: 0}
 .page { background-color: #292926; }
 
 #spinnerContainer {
-    position: absolute; z-index: 1000; top: 40%; 
-    width: 100%;
-    background-color: #393937;
-    border-top: 1px solid #4B4B4A;
-    border-bottom: 1px dashed #4B4B4A;
+    position: absolute; 
+    z-index: 1000; 
+    
+    top: 0; 
+    bottom: 0;
+    left: 0;
+    right: 0;
+    
+    /* Vertical centering */
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    box-orient: vertical;
+
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    box-pack: center;
+
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    box-align: center;
+    
     text-align: center;
     padding: 5px;
 }
 #spinnerContainer .flower { 
-    background-image: url('../images/flower.png');
-    width: 35px; height: 35px; 
+    background-image: url('../images/flower.png');  
+    width: 140px; 
+    height: 152px;
+    margin-bottom: 20px;
     display: inline-block;
-    -webkit-animation-name: rotate; -webkit-animation-duration: .7s; -webkit-animation-iteration-count: infinite; -webkit-animation-timing-function: linear; 
+    -webkit-animation-name: rotate; -webkit-animation-duration: 1s; -webkit-animation-iteration-count: infinite; -webkit-animation-timing-function: linear; 
 }
 #status { display: block; width: 100%; text-align: center; top: 55%; color: #fff; font-shadow: 1px 1px 1px #1E1E1E; }

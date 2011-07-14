@@ -75,6 +75,8 @@ $(bc).bind("init", function () {
 
 // displays a spinner/progress indicator with a message
 app.showProgress = function(status) {
+  var status = status || '';
+  
 	$('#status').html(status);
 	app.spinner.show();
 	// does nothing at the moment
@@ -195,7 +197,7 @@ app.displayDetail = function(image) {
 
 	// TODO when loading an image, precache both the previous and next image AFTER the current image
 	// TODO get the target and set the source
-	app.showProgress('Loading image');
+	app.showProgress();
 	$('#largeImage').hide().attr('src', image.attr('data-full'));
 
 	app.recenterImage();
