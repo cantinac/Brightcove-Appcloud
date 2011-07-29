@@ -1,12 +1,32 @@
 body { background-color: #222; }
+#content { text-align: center; margin: 0 auto; }
+
+#controls { margin: 5px; }
+#controls .ui-button-text { padding: 0px 2px; font-size: 12px; }
+#controls > div { display: inline-block; }
+#controls #views button { padding-right: 12px; padding-left: 2px; }
+#controls #views .ui-icon { right:-1px; }
+
 #phone { display: inline-block; text-align: left; position: relative;}
-#phoneWrapper { text-align: center; margin: 0 auto; }
-#phone.android { 
+#phone.android { padding-top: 0px; padding-left: 0px; }
+#phone.android.portrait { 
     width: 368px; height: 674; 
     background-image:url('images/thunderbolt-stencil.png');
-    padding-top: 0px; padding-left: 0px;
 }
-#phone.android iframe { width: 320px; height: 508px; margin-top: 94px; margin-left: 25px;}
-#phone.android .actions { width: 320px; height: 20px; left: 25px; position: absolute; }
-.android .actions .back { width: 24px; height: 20px; display: block; left: 184px; position: absolute;}
+#phone.android.landscape { 
+    height: 368px; width: 674; 
+    background-image:url('images/thunderbolt-stencil-landscape.png');
+}
+
+/* #phone.android .actions a { border: 1px solid red; } */
+
+#phone.android.portrait iframe { width: 320px; height: 508px; margin-top: 94px; margin-left: 25px;}
+#phone.android.portrait .actions { width: 320px; height: 20px; left: 25px; position: absolute; }
+#phone.android.portrait .actions .back { width: 24px; height: 20px; display: block; left: 184px; position: absolute;}
+
+#phone.android.landscape iframe { width: 508px; height: 320px; margin-top: 22px; margin-left: 94px;}
+#phone.android.landscape .actions { width: 20px; height: 320px; left: 603px; top: 21px; position: absolute; }
+#phone.android.landscape .actions .back { width: 24px; height: 20px; display: block; left: 0px; top: 112px; position: absolute;}
+
+.rotate-90-left { -webkit-transform:rotate(-90deg) }
 

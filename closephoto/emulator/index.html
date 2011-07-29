@@ -3,7 +3,9 @@
 <head>
 	<title>AppCloud application emulator</title>
     <link rel="stylesheet" href="emu.css" />
+    <link type="text/css" href="smoothness/jquery-ui-1.8.14.custom.css" rel="stylesheet" />
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
 
     <script type="text/javascript">
 function frameChanged() {
@@ -11,14 +13,50 @@ function frameChanged() {
 }
 
 $(function() {
+	$(".button").button();
+	$(".radioset").buttonset();
+	$("#selectView").button({ icons: {secondary:'ui-icon-triangle-1-s'} });
+
+	// event handlers
 	$('#phone .actions .back').click(function() {
 		bc.ui.backPage();
 	});
+
+	$('#orientation input').change(function() {
+		var portrait = $('#portrait').get(0).checked
+
+		$('#phone').removeClass(portrait ? 'landscape' : 'portrait')
+			.addClass(portrait ? 'portrait' : 'landscape');
+	});
+
+	// defaults
+	$('#portrait').get(0).checked = true;
+	$('#portrait').trigger('change');
 });
     </script>
 </head>
 
 <body>
+<div id="content">
+
+<div id="controls">
+	<div id="orientation" class="radioset">
+		<input type="radio" id="portrait" name="orientation" /><label for="portrait"><img src="images/iphone-portait.png" /></label>
+		<input type="radio" id="landscape" name="orientation" /><label for="landscape"><img src="images/iphone-portait.png" class="rotate-90-left" /></label>
+	</div>
+
+<!--
+	<div id="swipes">
+		<button id="swipeLeft" class="button ui-icon ui-icon-arrowreturnthick-1-w" title="Swipe Left" />
+		<button id="swipeLeft" class="button ui-icon ui-icon-arrowreturnthick-1-e" title="Swipe Right" />
+	</div>
+
+	<div id="views">
+		<button id="selectView">Views</button>
+	</div>
+-->
+
+</div>
 
 <div id="phoneWrapper">
 	<div id="phone" class="android">
@@ -29,6 +67,7 @@ $(function() {
 	</div>
 </div>
 
+</div>
 </body>
 
 
