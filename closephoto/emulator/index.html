@@ -9,10 +9,14 @@
 
     <script type="text/javascript">
 function frameChanged() {
-	bc = $('#phone iframe').get(0).contentWindow.bc;
+	var contentWindow = bc = $('#phone iframe').get(0).contentWindow;
+	bc = contentWindow.bc;
+	$$ = contentWindow.$;	// save off the other jquery so we can use it
 }
 
 $(function() {
+	var triggerSwipe;
+
 	$(".button").button();
 	$(".radioset").buttonset();
 	$("#selectView").button({ icons: {secondary:'ui-icon-triangle-1-s'} });
@@ -42,6 +46,15 @@ $(function() {
 
 	$('#iphone').get(0).checked = true;
 	$('#iphone').trigger('change');
+
+	triggerSwipe = function(direction) {
+		var current = bc.ui.currentPage;
+		if (!current) return;
+		$$(current).trigger('swipe', direction);
+	};
+
+	$('#swipeLeft').click(function() { triggerSwipe('swipeLeft'); });
+	$('#swipeRight').click(function() { triggerSwipe('swipeRight'); });
 });
     </script>
 </head>
@@ -60,17 +73,16 @@ $(function() {
 		<input type="radio" id="android" name="device" /><label for="android"><img src="images/android-icon.png" /></label>
 	</div>
 
-<!--
 	<div id="swipes">
 		<button id="swipeLeft" class="button ui-icon ui-icon-arrowreturnthick-1-w" title="Swipe Left" />
-		<button id="swipeLeft" class="button ui-icon ui-icon-arrowreturnthick-1-e" title="Swipe Right" />
+		<button id="swipeRight" class="button ui-icon ui-icon-arrowreturnthick-1-e" title="Swipe Right" />
 	</div>
 
+<!--
 	<div id="views">
 		<button id="selectView">Views</button>
 	</div>
 -->
-
 </div>
 
 <div id="phoneWrapper">
