@@ -7,16 +7,8 @@ body { background-color: #222; }
 #controls #views button { padding-right: 12px; padding-left: 2px; }
 #controls #views .ui-icon { right:-1px; }
 
-/*
-iphone 4:
-	landscape: 480x251
-	portait: 320x411
-
-android: 
-	landscape; 533x295
-	portrait: 320x508
-*/
 #phone { display: inline-block; text-align: left; position: relative;}
+
 #phone.android { padding-top: 0px; padding-left: 0px; }
 #phone.android.portrait { 
     width: 368px; height: 674px; 
@@ -37,5 +29,16 @@ android:
 #phone.android.landscape .actions { width: 20px; height: 320px; left: 603px; top: 21px; position: absolute; }
 #phone.android.landscape .actions .back { width: 24px; height: 20px; display: block; left: 0px; top: 112px; position: absolute;}
 
-.rotate-90-left { -webkit-transform:rotate(-90deg) }
+#phone.iphone.portrait {
+    width: 383px; height: 747px;
+    background-image:url('images/iphone4-stencil-portrait.png');
+}
+#phone.iphone.portrait iframe { width: 320px; height: 460px; margin-top: 153px; margin-left: 33px;}
 
+#phone.iphone.landscape {
+    height: 383px; width: 747px;
+    background-image:url('images/iphone4-stencil-landscape.png');
+}
+#phone.iphone.landscape iframe { width: 480px; height: 300px; margin-top: 50px; margin-left: 133px;}
+
+.rotate-90-left { -webkit-transform:rotate(-90deg) }

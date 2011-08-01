@@ -23,15 +23,25 @@ $(function() {
 	});
 
 	$('#orientation input').change(function() {
-		var portrait = $('#portrait').get(0).checked
+		var portrait = $('#portrait').get(0).checked;
 
 		$('#phone').removeClass(portrait ? 'landscape' : 'portrait')
 			.addClass(portrait ? 'portrait' : 'landscape');
 	});
 
+	$('#device input').change(function() {
+		var iphone = $('#iphone').get(0).checked;
+
+		$('#phone').removeClass(iphone ? 'android' : 'iphone')
+			.addClass(iphone ? 'iphone' : 'android');
+	});
+
 	// defaults
 	$('#portrait').get(0).checked = true;
 	$('#portrait').trigger('change');
+
+	$('#iphone').get(0).checked = true;
+	$('#iphone').trigger('change');
 });
     </script>
 </head>
@@ -43,6 +53,11 @@ $(function() {
 	<div id="orientation" class="radioset">
 		<input type="radio" id="portrait" name="orientation" /><label for="portrait"><img src="images/iphone-portait.png" /></label>
 		<input type="radio" id="landscape" name="orientation" /><label for="landscape"><img src="images/iphone-portait.png" class="rotate-90-left" /></label>
+	</div>
+
+	<div id="device" class="radioset">
+		<input type="radio" id="iphone" name="device" /><label for="iphone"><img src="images/iphone-icon.png" /></label>
+		<input type="radio" id="android" name="device" /><label for="android"><img src="images/android-icon.png" /></label>
 	</div>
 
 <!--
@@ -59,7 +74,7 @@ $(function() {
 </div>
 
 <div id="phoneWrapper">
-	<div id="phone" class="android">
+	<div id="phone">
 		<iframe src="../html/home.html" frameborder="0" onload="frameChanged();"></iframe>
 		<div class="actions">
 			<a class="back" onclick="return false;" href="#"><span></span></a>
