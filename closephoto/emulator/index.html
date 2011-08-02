@@ -12,10 +12,32 @@ function frameChanged() {
 	var contentWindow = bc = $('#phone iframe').get(0).contentWindow;
 	bc = contentWindow.bc;
 	$$ = contentWindow.$;	// save off the other jquery so we can use it
+	console.log('changed');
+}
+
+function changeView(uri) {
+	// TODO handle reloading the current page?
+	$('#phone iframe').attr('src', '../' + uri);
 }
 
 $(function() {
 	var triggerSwipe;
+
+	$.get('../manifest.xml', function(xml) {
+		var ul = $('#views ul');
+		ul.html('');
+
+		$(xml).find('view').each(function() {
+			var uri = $(this).find('uri').text(),
+				label = $(this).find('navigationTitle').text(),
+				icon = $(this).find('navigationIcon').text();
+
+			// todo include icon
+			ul.append('<li><a href="#" onclick="changeView(\'' + uri + '\'); return false;">' + (icon ? '<img src="../'+icon+'" title="'+label+'" />' : '<span>'+label+'</span>') + '</a></li>');
+		});
+
+		$('#views').show();
+	});
 
 	$(".button").button();
 	$(".radioset").buttonset();
@@ -73,16 +95,19 @@ $(function() {
 		<input type="radio" id="android" name="device" /><label for="android"><img src="images/android-icon.png" /></label>
 	</div>
 
-	<div id="swipes">
-		<button id="swipeLeft" class="button ui-icon ui-icon-arrowreturnthick-1-w" title="Swipe Left" />
-		<button id="swipeRight" class="button ui-icon ui-icon-arrowreturnthick-1-e" title="Swipe Right" />
-	</div>
+	<div id="miniControls">
+		<div id="views" style="display: none;">
+			<button id="selectView">Views</button>
+			<ul>
+			</ul>
+		</div>
 
-<!--
-	<div id="views">
-		<button id="selectView">Views</button>
+		<div id="swipes">
+			<button id="swipeLeft" class="button ui-icon ui-icon-arrowreturnthick-1-w" title="Swipe Left" />
+			<button id="swipeRight" class="button ui-icon ui-icon-arrowreturnthick-1-e" title="Swipe Right" />
+		</div>
+
 	</div>
--->
 </div>
 
 <div id="phoneWrapper">
