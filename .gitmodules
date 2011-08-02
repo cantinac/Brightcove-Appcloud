@@ -1,0 +1,3 @@
+[submodule "closephoto/emulator"]
+	path = closephoto/emulator
+	url = git@github.com:BrightcoveOS/App-Cloud-Emulator.git
