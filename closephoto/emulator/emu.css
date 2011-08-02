@@ -7,6 +7,12 @@ body { background-color: #222; }
 #controls #views button { padding-right: 12px; padding-left: 2px; }
 #controls #views .ui-icon { right:-1px; }
 
+#attribution {margin-top:5px}
+#attribution, #attribution a { color: #bbb; font-size: 10px }
+#attribution a { text-decoration: none }
+#attribution a span:hover { text-decoration: underline }
+#attribution img {height: 25px; margin-bottom: -12px; padding-left: 5px}
+
 #views ul { font-size: .8em; position: absolute; z-index: 1000; list-style-type: none; background-color: #eee; margin: 0px; padding: 5px 0px; margin-left: 5px; border-radius: 3px; display: none }
 #views:hover ul { display: block }
 #views li { text-align: left; padding: 0px 5px; }

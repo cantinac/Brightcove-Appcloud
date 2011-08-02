@@ -12,7 +12,6 @@ function frameChanged() {
 	var contentWindow = bc = $('#phone iframe').get(0).contentWindow;
 	bc = contentWindow.bc;
 	$$ = contentWindow.$;	// save off the other jquery so we can use it
-	console.log('changed');
 }
 
 function changeView(uri) {
@@ -129,6 +128,10 @@ $(function() {
 			<a class="back" onclick="return false;" href="#"><span></span></a>
 		</div>
 	</div>
+</div>
+
+<div id="attribution">
+	&copy; 2011 Created by <a href="http://cantina.co" target="_blank"><span>Cantina Consulting</span> <img src="images/cantina-logo.png" /></a>
 </div>
 
 </div>
