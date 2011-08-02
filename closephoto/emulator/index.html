@@ -21,7 +21,7 @@ function changeView(uri) {
 }
 
 $(function() {
-	var triggerSwipe;
+	var triggerSwipe, updateDisplay;
 
 	$.get('../manifest.xml', function(xml) {
 		var ul = $('#views ul');
@@ -48,11 +48,21 @@ $(function() {
 		bc.ui.backPage();
 	});
 
+	// triggers display updates (such as orientation after display changes)
+	updateDisplay = function() {
+		// if you don't change the orientation you have to trigger the event yourself
+		// we'll force the orientation to be changed
+		if (typeof bc != 'undefined') bc.context.viewOrientation = null;
+		$( $('#phone iframe').get(0).contentWindow ).trigger('resize');
+	};
+
 	$('#orientation input').change(function() {
 		var portrait = $('#portrait').get(0).checked;
 
 		$('#phone').removeClass(portrait ? 'landscape' : 'portrait')
 			.addClass(portrait ? 'portrait' : 'landscape');
+
+		updateDisplay();
 	});
 
 	$('#device input').change(function() {
@@ -60,6 +70,8 @@ $(function() {
 
 		$('#phone').removeClass(iphone ? 'android' : 'iphone')
 			.addClass(iphone ? 'iphone' : 'android');
+
+		updateDisplay();
 	});
 
 	// defaults
